@@ -587,6 +587,13 @@ def run_setup_bot(BOT_TOKEN, API_ID, API_HASH, OWNER_ID, PHONE_NUMBER):
     app.add_handler(CommandHandler("connect", cmd_connect))
     app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"(?i)^pass "), handle_pass))
     app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"(?i)^aa"), handle_code))
+
+    # Compatibilité Python 3.12+ : s'assurer qu'une boucle asyncio existe
+    try:
+        asyncio.get_event_loop()
+    except RuntimeError:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+
     app.run_polling(drop_pending_updates=True)
 
 
@@ -1666,12 +1673,15 @@ Réponds en JSON strict UNIQUEMENT :
         except Exception as e:
             err = str(e)
             logger.error(f"❌ Session invalide : {e}")
-            # Effacer la session invalide pour basculer en mode SETUP
+            # Si la session est bloquée (double IP), effacer uniquement session.txt
+            # mais conserver config.json pour que l'admin puisse récupérer la chaîne
             try:
-                cfg2 = load_config()
-                cfg2.setdefault("credentials", {})["telegram_session"] = ""
-                save_config(cfg2)
                 Path(SESSION_FILE).write_text("")
+                if "two different IP" in err or "non autorisée" in err.lower() or "not authorized" in err.lower():
+                    # Session vraiment morte → effacer aussi config.json
+                    cfg2 = load_config()
+                    cfg2.setdefault("credentials", {})["telegram_session"] = ""
+                    save_config(cfg2)
                 logger.warning("🗑 Session effacée — passage en mode SETUP")
             except Exception: pass
             return

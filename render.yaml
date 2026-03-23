@@ -1,9 +1,12 @@
 services:
   - type: web
-    name: assistance-sossou
+    name: assista-kouame
     runtime: python
     pythonVersion: "3.11.3"
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python main.py
     healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.3"

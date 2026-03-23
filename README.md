@@ -1,16 +1,10 @@
 # Assista Kouamé — Bot Userbot Telegram Multi-IA
 
-## Sur Render : une seule étape
-Ajouter la variable TELEGRAM_SESSION avec ta chaîne de session.
-Tout le reste (API_ID, API_HASH, BOT_TOKEN, ADMIN_ID) est déjà configuré.
+## Render — Configuration requise
+Python 3.11.3 est forcé via runtime.txt, .python-version et render.yaml.
+Une seule variable à ajouter : TELEGRAM_SESSION
 
-## Si la session est bloquée (erreur deux IP)
-Le bot bascule automatiquement en mode SETUP.
-Envoie /connect au bot pour générer une nouvelle session.
+## Si pas de session : envoyer /connect au bot, suivre les instructions.
 
-## Commandes Render
-Build : pip install -r requirements.txt
-Start : python main.py
-
-## Clés IA
-Après démarrage : /menu → 🤖 Fournisseurs IA
+## Build : pip install -r requirements.txt
+## Start : python main.py
