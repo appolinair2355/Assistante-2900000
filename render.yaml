@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: assistance-sossou
+    runtime: python
+    pythonVersion: "3.11.3"
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    healthCheckPath: /
